@@ -111,8 +111,6 @@ def show_trivia_page():
             'options': ['10%', '20%', '30%', '40%'],
             'correct_answer': '30%'
         },
-
-        # Add more questions here
     ]
 
     if session_state.current_question < len(questions):
