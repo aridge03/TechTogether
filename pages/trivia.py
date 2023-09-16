@@ -119,14 +119,14 @@ def show_trivia_page():
         question_data = questions[session_state.current_question]
         st.write(f'**Question {session_state.current_question + 1}:** {question_data["question"]}')
         selected_option = st.radio('Select an option:', question_data['options'])
-        
-        if st.button('Next Question'):
+        col1, col2 = st.columns(2)
+        if col2.button('Next Question'):
             if selected_option == question_data['correct_answer']:
                 session_state.score += 1
             st.write('Moving to the next question...')
             session_state.current_question += 1
             st.experimental_rerun()
-        if session_state.current_question !=0 and st.button('Previous Question'):
+        if session_state.current_question !=0 and col1.button('Previous Question'):
             session_state.current_question -= 1
             st.experimental_rerun()
     else:
