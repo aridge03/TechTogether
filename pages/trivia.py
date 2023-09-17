@@ -1,7 +1,8 @@
 import streamlit as st
 
 def show_trivia_page():
-    st.title('Gender Pay Gap Quiz')
+    centered_title = '<h1 style="text-align:center;">Gender Pay Gap Quiz</h1>'
+    st.markdown(centered_title, unsafe_allow_html=True)
     session_state = st.session_state
 
     if 'current_question' not in session_state:
@@ -163,10 +164,10 @@ def show_trivia_page():
 
     if session_state.current_question < len(questions):
         question_data = questions[session_state.current_question]
-        st.write(f'**Question {session_state.current_question + 1}:** {question_data["question"]}')
+        st.write(f'#### **Question {session_state.current_question + 1}:** {question_data["question"]}')
         selected_option = st.radio('Select an option:', question_data['options'])
         col1, col2 = st.columns(2)
-        if col2.button('Next Question'):
+        if (session_state.current_question == len(questions)-1 and col2.button('Finish')) or (session_state.current_question < len(questions)-1 and col2.button('Next Question')):
             if selected_option == question_data['correct_answer']:
                 session_state.score += 1
             session_state.user_answers.append(selected_option)
@@ -176,7 +177,8 @@ def show_trivia_page():
             session_state.current_question -= 1
             st.experimental_rerun()
     else:
-        st.write('Quiz completed. Thanks for playing! Your score is', str(session_state.score) + "/" + str(len(questions)))
+        centered_message = '<p style="text-align:center;">Quiz completed. Thanks for playing! Your score is: {}/20</p>'.format(session_state.score)
+        st.markdown(centered_message, unsafe_allow_html=True)
         if session_state.score<=4:
             result = outcomes[0]
         elif session_state.score<=8:
@@ -187,18 +189,21 @@ def show_trivia_page():
             result = outcomes[3]
         else:
             result = outcomes[4]
-        st.write(result['level'])
+        st.write('')
+        centered_text = '<div style="text-align:center; font-size:24px;">Basic Awareness</div>'
+        st.markdown(centered_text, unsafe_allow_html=True)
+        st.write('')
         st.write(result['feedback'])
 
         st.write('')
-        st.write('Summary of Your Answers:')
-        for i, question_data in enumerate(questions):
-            st.write(f'Question {i + 1}: {question_data["question"]}')
-            st.write(f'Your Answer: {session_state.user_answers[i] if "user_answers" in session_state else "Not answered"}')
-            st.write(f'Correct Answer: {question_data["correct_answer"]}')
-            st.write(f'Source: {question_data["source"]}')
-            st.write('')
-            st.write('')
+        with st.expander('Summary of Your Answers:'):
+            for i, question_data in enumerate(questions):
+                st.write(f'Question {i + 1}: {question_data["question"]}')
+                st.write(f'Your Answer: {session_state.user_answers[i] if "user_answers" in session_state else "Not answered"}')
+                st.write(f'Correct Answer: {question_data["correct_answer"]}')
+                st.write(f'Source: {question_data["source"]}')
+                st.write('')
+                st.write('')
 def main():
     show_trivia_page()
 if __name__ == "__main__":
