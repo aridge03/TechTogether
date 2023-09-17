@@ -1,0 +1,9 @@
+name: tech_env
+channels:
+  - defaults
+dependencies:
+  - python=3.9
+  - numpy
+  - pandas
+  - streamlit
+  - streamlit-extras
