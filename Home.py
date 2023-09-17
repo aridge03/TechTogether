@@ -5,7 +5,6 @@ from streamlit_extras.let_it_rain import rain
 
 def main():
 
-    from streamlit_extras.let_it_rain import rain
 
     rain(
         emoji="👩🏾‍🔬,👨🏽‍💼",
