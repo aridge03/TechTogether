@@ -10,6 +10,9 @@ def show_trivia_page():
     if 'score' not in session_state:
         session_state.score = 0
 
+    if 'user_answers' not in session_state:
+        session_state.user_answers = []
+
     questions = [
         {
             'question': 'Which of the following is a common factor contributing to the gender pay gap? ',
@@ -121,7 +124,7 @@ def show_trivia_page():
         if col2.button('Next Question'):
             if selected_option == question_data['correct_answer']:
                 session_state.score += 1
-            st.write('Moving to the next question...')
+            session_state.user_answers.append(selected_option)
             session_state.current_question += 1
             st.experimental_rerun()
         if session_state.current_question !=0 and col1.button('Previous Question'):
@@ -129,3 +132,11 @@ def show_trivia_page():
             st.experimental_rerun()
     else:
         st.write('Quiz completed. Thanks for playing! Your score is', str(session_state.score) + "/" + str(len(questions)))
+        st.write('')
+        st.write('Summary of Your Answers:')
+        for i, question_data in enumerate(questions):
+            st.write(f'Question {i + 1}: {question_data["question"]}')
+            st.write(f'Your Answer: {session_state.user_answers[i] if "user_answers" in session_state else "Not answered"}')
+            st.write(f'Correct Answer: {question_data["correct_answer"]}')
+            st.write('')
+            st.write('')
