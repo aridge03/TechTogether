@@ -7,3 +7,4 @@ dependencies:
   - pandas
   - streamlit
   - streamlit-extras
+  - -r requirements.txt
