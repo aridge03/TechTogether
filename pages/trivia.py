@@ -138,7 +138,7 @@ def show_trivia_page():
 
     if session_state.current_question < len(questions):
         question_data = questions[session_state.current_question]
-        st.write(f'**Question {session_state.current_question + 1}:** {question_data["question"]}')
+        st.write(f'### **Question {session_state.current_question + 1}:** {question_data["question"]}')
         selected_option = st.radio('Select an option:', question_data['options'])
         col1, col2 = st.columns(2)
         if col2.button('Next Question'):
