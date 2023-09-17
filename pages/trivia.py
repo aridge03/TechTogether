@@ -1,11 +1,13 @@
 import streamlit as st
+from streamlit_extras.let_it_rain import rain
 
 def show_trivia_page():
-    st.title('Gender Pay Gap Quiz')
+    centered_title = '<h1 style="text-align:center;">Gender Pay Gap Quiz</h1>'
+    st.markdown(centered_title, unsafe_allow_html=True)
     session_state = st.session_state
 
     if 'current_question' not in session_state:
-        session_state.current_question = 0
+        session_state.current_question = 0 
 
     if 'score' not in session_state:
         session_state.score = 0
@@ -18,7 +20,7 @@ def show_trivia_page():
             'question': 'Which of the following is a common factor contributing to the gender pay gap? ',
             'options': ["Women's stronger negotiation skills", 'Occupational segregation', 'Equal representation in leadership roles', 'Lack of educational opportunities for women'],
             'correct_answer': 'Occupational segregation',
-            'source': ""
+            'source': "https://inequality.stanford.edu/sites/default/files/Pathways_SOTU_2018_occupational-segregation.pdf"
         },
         {
             'question': 'What is the approximate gender pay gap per hour experienced by girls aged 12 to 18 in summer jobs?',
@@ -30,7 +32,7 @@ def show_trivia_page():
             'question': 'What is the gender pay gap typically measured as?',
             'options': ['Difference in working hours', 'Difference in earnings between men and women', 'Difference in job satisfaction', 'Difference in educational attainment Correct'],
             'correct_answer': 'Difference in earnings between men and women',
-            'source': ""
+            'source': "https://www.britannica.com/money/topic/gender-wage-gap"
         },
         {
             'question': 'What percentage of a pension do women typically retire with compared to men? ',
@@ -66,7 +68,7 @@ def show_trivia_page():
             'question': 'What is the "Motherhood Penalty" referring to in the context of the gender pay gap? ',
             'options': ['A penalty for women who choose not to have children', 'A penalty for women who work part-time', 'A penalty for women with children, who often experience lower wages', 'A penalty for women who prioritize their careers over family'],
             'correct_answer': 'A penalty for women with children, who often experience lower wages',
-            'source': ""
+            'source': "https://www.aauw.org/issues/equity/motherhood/"
         },
         {
             'question': 'According to a 2017 study by the World Economic Forum, approximately how many more years, at present trends, would it take to close the economic gender gap worldwide?',
@@ -84,7 +86,7 @@ def show_trivia_page():
             'question': 'The gender pay gap tends to be wider for women who:',
             'options': ['Work in male-dominated fields', 'Have higher levels of education', 'Live in urban areas', 'Have more years of work experience'],
             'correct_answer': 'Work in male-dominated fields',
-            'source': ""
+            'source': "https://www.inhersight.com/blog/data-research/size-gender-pay-gap-varies-across-industries#:~:text=Although%20the%20wage%20gap%20exists%20in%20almost%20every,male-dominated%20occupations%20tend%20to%20have%20larger%20pay%20gaps."
         },
         {
             'question': 'In 2018, transgender employees were how many times more likely to experience unwanted behaviors in the workplace compared to cisgender employees, including inappropriate sexual jokes, unwanted sexual and physical attention, and suggestions regarding their behavior? ',
@@ -102,7 +104,7 @@ def show_trivia_page():
             'question': "What is the term used to describe the cumulative impact of the gender pay gap over a woman's career?",
             'options': ['Career gap', 'Income disparity', 'Wage discrimination', 'Lifetime earnings gap'],
             'correct_answer': 'Lifetime earnings gap',
-            'source': ""
+            'source': "http://www.ecns.cn/news/cns-wire/2022-03-03/detail-ihawawkt8345576.shtml"
         },
         {
             'question': "In the 1980s, women, on average, were making approximately how much of what men in the same jobs were earning?",
@@ -163,10 +165,10 @@ def show_trivia_page():
 
     if session_state.current_question < len(questions):
         question_data = questions[session_state.current_question]
-        st.write(f'**Question {session_state.current_question + 1}:** {question_data["question"]}')
+        st.write(f'#### **Question {session_state.current_question + 1}:** {question_data["question"]}')
         selected_option = st.radio('Select an option:', question_data['options'])
         col1, col2 = st.columns(2)
-        if col2.button('Next Question'):
+        if (session_state.current_question == len(questions)-1 and col2.button('Finish')) or (session_state.current_question < len(questions)-1 and col2.button('Next Question')):
             if selected_option == question_data['correct_answer']:
                 session_state.score += 1
             session_state.user_answers.append(selected_option)
@@ -176,9 +178,11 @@ def show_trivia_page():
             session_state.current_question -= 1
             st.experimental_rerun()
     else:
-        st.write('Quiz completed. Thanks for playing! Your score is', str(session_state.score) + "/" + str(len(questions)))
+        centered_message = '<p style="text-align:center;">Quiz completed. Thanks for playing! Your score is: {}/20</p>'.format(session_state.score)
+        st.markdown(centered_message, unsafe_allow_html=True)
         if session_state.score<=4:
             result = outcomes[0]
+    
         elif session_state.score<=8:
             result = outcomes[1]
         elif session_state.score<=12:
@@ -187,18 +191,28 @@ def show_trivia_page():
             result = outcomes[3]
         else:
             result = outcomes[4]
-        st.write(result['level'])
-        st.write(result['feedback'])
-
         st.write('')
-        st.write('Summary of Your Answers:')
-        for i, question_data in enumerate(questions):
-            st.write(f'Question {i + 1}: {question_data["question"]}')
-            st.write(f'Your Answer: {session_state.user_answers[i] if "user_answers" in session_state else "Not answered"}')
-            st.write(f'Correct Answer: {question_data["correct_answer"]}')
-            st.write(f'Source: {question_data["source"]}')
-            st.write('')
-            st.write('')
+        centered_text = '<div style="text-align:center; font-size:24px;">{}</div>'.format(result['level'])
+        st.markdown(centered_text, unsafe_allow_html=True)
+        st.write('')
+        centered_text_feedback = '<div style="text-align:center; font-size:18px;">{}</div>'.format(result['feedback'])
+        st.markdown(centered_text_feedback, unsafe_allow_html=True)
+        rain(
+            emoji="🏳️‍🌈✨",
+            font_size=25,
+            falling_speed=20,
+            animation_length="infinite", 
+
+        )
+        st.write('')
+        with st.expander('Summary of Your Answers:'):
+            for i, question_data in enumerate(questions):
+                st.write(f'Question {i + 1}: {question_data["question"]}')
+                st.write(f'Your Answer: {session_state.user_answers[i] if "user_answers" in session_state else "Not answered"}')
+                st.write(f'Correct Answer: {question_data["correct_answer"]}')
+                st.write(f'Source: {question_data["source"]}')
+                st.write('')
+                st.write('')
 def main():
     show_trivia_page()
 if __name__ == "__main__":
