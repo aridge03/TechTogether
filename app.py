@@ -16,8 +16,6 @@ def main():
     "Quizzing the Wage Divide: A Gender Gap Guessing Game</h2>",
     unsafe_allow_html=True
     )
-    if st.button("Start Trivia"):
-        show_trivia_page()
 
 if __name__ == "__main__":
     main()
