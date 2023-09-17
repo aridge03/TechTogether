@@ -13,7 +13,7 @@ def show_trivia_page():
         session_state.score = 0
 
     if 'user_answers' not in session_state:
-        session_state.user_answers = []
+        session_state.user_answers = [None]*20
 
     questions = [
         {
@@ -131,7 +131,7 @@ def show_trivia_page():
             'source': "https://moneyzine.com/careers-resources/female-ceo-statistics/"
         },
         {
-            'question': "Women are what percentage less likely than men to get promoted out of an entry-level job ",
+            'question': "Women are what percentage less likely than men to get promoted out of an entry-level job? ",
             'options': ['10%', '20%', '30%', '40%'],
             'correct_answer': '30%',
             'source': "https://canadianwomen.org/the-facts/women-and-leadership-in-canada/"
@@ -169,15 +169,18 @@ def show_trivia_page():
         selected_option = st.radio('Select an option:', question_data['options'])
         col1, col2 = st.columns(2)
         if (session_state.current_question == len(questions)-1 and col2.button('Finish')) or (session_state.current_question < len(questions)-1 and col2.button('Next Question')):
-            if selected_option == question_data['correct_answer']:
-                session_state.score += 1
-            session_state.user_answers.append(selected_option)
+            session_state.user_answers[session_state.current_question] = selected_option
             session_state.current_question += 1
             st.experimental_rerun()
         if session_state.current_question !=0 and col1.button('Previous Question'):
             session_state.current_question -= 1
+            session_state.user_answers[session_state.current_question] = selected_option
             st.experimental_rerun()
     else:
+        for i, question_data in enumerate(questions):
+            if session_state.user_answers[i] == question_data["correct_answer"]:
+                session_state.score +=1
+
         centered_message = '<p style="text-align:center;">Quiz completed. Thanks for playing! Your score is: {}/20</p>'.format(session_state.score)
         st.markdown(centered_message, unsafe_allow_html=True)
         if session_state.score<=4:
